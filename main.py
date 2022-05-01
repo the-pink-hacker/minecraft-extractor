@@ -4,7 +4,7 @@ import sys
 from minecraft_extractor import minecraft
 from minecraft_extractor.extract import Extractor
 from minecraft_extractor.settings import MAIN_SETTINGS
-from minecraft_extractor.util import folder_dialog
+from minecraft_extractor.util.files import folder_dialog
 
 
 def main():

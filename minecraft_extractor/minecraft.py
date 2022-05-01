@@ -3,7 +3,7 @@ import os.path
 from dataclasses import dataclass, asdict
 
 from minecraft_extractor.settings import MAIN_SETTINGS
-from minecraft_extractor.util import download_file
+from minecraft_extractor.util.files import download_file
 
 _VERSION_MANIFEST = "version_manifest_v2.json"
 _VERSION_MANIFEST_URL = f"https://launchermeta.mojang.com/mc/game/{_VERSION_MANIFEST}"

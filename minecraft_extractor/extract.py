@@ -4,6 +4,7 @@ import shutil
 
 from minecraft_extractor.minecraft import MinecraftVersion
 from minecraft_extractor.settings import MAIN_SETTINGS
+from minecraft_extractor.util.console import get_logger
 
 
 class Extractor:
@@ -16,7 +17,7 @@ class Extractor:
         self.version = MinecraftVersion(version)
         self.out_dir = MAIN_SETTINGS.get_property("locations", "out")
         self.temp_dir = MAIN_SETTINGS.get_property("locations", "temp")
-        self.logger = logging.getLogger("Extract")
+        self.logger = get_logger("Extract")
 
     def run(self):
         # Setup temp dir
@@ -28,7 +29,7 @@ class Extractor:
 
     def extract_indexed_assets(self):
         assets = self.version.get_assets()
-        logging.info("Extracting indexed assets...")
+        self.logger.info("Extracting indexed assets...")
         for i, asset in enumerate(assets, start=1):
             asset_dir = os.path.join(MAIN_SETTINGS.get_property("locations", "minecraft"),
                                      "assets",

@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-_LOGGER = logging.getLogger("SETTINGS")
+_LOGGER = logging.getLogger("Settings")
 
 
 class Settings:
