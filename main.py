@@ -1,3 +1,4 @@
+import logging
 import sys
 
 from minecraft_extractor import minecraft
@@ -7,10 +8,20 @@ from minecraft_extractor.util import folder_dialog
 
 
 def main():
+    setup_logger()
     setup_settings()
     minecraft.init()
 
-    Extractor("1.9").run()
+    Extractor("1.18.2").run()
+
+
+def setup_logger():
+    logging.basicConfig(
+        format="[\x1b[32m%(asctime)s\x1b[0m] [\x1b[34m%(name)s\x1b[0m] "
+               "[\x1b[33m%(levelname)s\x1b[0m] \x1b[36m%(message)s\x1b[0m",
+        datefmt="%H:%M:%S",
+        level=logging.INFO
+    )
 
 
 def setup_settings():
