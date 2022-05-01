@@ -1,21 +1,24 @@
 import logging
 import os.path
 import shutil
-from zipfile import ZipFile
+from typing import Optional
+from zipfile import ZipFile, ZipInfo
 
-from minecraft_extractor.minecraft import MinecraftVersion
+from minecraft_extractor.minecraft import MinecraftVersion, IndexedAsset
 from minecraft_extractor.settings import MAIN_SETTINGS
 from minecraft_extractor.util.console import get_logger
 
 
 class Extractor:
     version: MinecraftVersion
+    extract: list[str]
     out_dir: str
     temp_dir: str
     logger: logging.Logger
 
-    def __init__(self, version: str):
+    def __init__(self, version: str, extract: list[str]):
         self.version = MinecraftVersion(version)
+        self.extract = extract
         self.out_dir = MAIN_SETTINGS.get_property("locations", "out")
         self.temp_dir = MAIN_SETTINGS.get_property("locations", "temp")
         self.logger = get_logger("Extract", str(self.version))
@@ -34,7 +37,9 @@ class Extractor:
 
         logger = get_logger(self.logger.name, "Indexed")
 
-        for i, asset in enumerate(assets, start=1):
+        filtered_assets = list(filter(self.should_extract_indexed_asset, assets))
+
+        for i, asset in enumerate(filtered_assets, start=1):
             asset_dir = os.path.join(MAIN_SETTINGS.get_property("locations", "minecraft"),
                                      "assets",
                                      "objects",
@@ -50,7 +55,8 @@ class Extractor:
                 os.makedirs(os.path.dirname(asset_temp_dir))
                 shutil.copyfile(asset_dir, asset_temp_dir)
 
-            logger.info(f"Extracted asset [{i}/{len(assets)}]: assets/{asset.file}")
+            if i % 100 == 0 or i == len(filtered_assets):
+                logger.info(f"Extracted asset [{i}/{len(filtered_assets)}]")
 
     def extract_jar(self):
         logger = get_logger(self.logger.name, "Jar")
@@ -58,12 +64,33 @@ class Extractor:
         self.version.download_jar()
 
         with ZipFile(self.version.jar_dir, "r") as jar:
-            for i, archive_file in enumerate(jar.filelist, start=1):
+            filtered_file_list = list(filter(self.should_extract_asset, jar.filelist))
+            for i, archive_file in enumerate(filtered_file_list, start=1):
                 jar.extract(archive_file, self.temp_dir)
-                logger.info(f"Extracted asset [{i}/{len(jar.filelist)}]: {archive_file.filename}")
+
+                if i % 100 == 0 or i == len(filtered_file_list):
+                    logger.info(f"Extracted file [{i}/{len(filtered_file_list)}]")
 
     def package(self):
         pass
 
     def clear_temp(self):
         shutil.rmtree(self.temp_dir)
+
+    def should_extract_asset(self, file: ZipInfo) -> Optional[ZipInfo]:
+        if self.extract == ["*"]:
+            return file
+
+        for extract in self.extract:
+            if file.filename.startswith(extract):
+                return file
+        return None
+
+    def should_extract_indexed_asset(self, asset: IndexedAsset) -> Optional[IndexedAsset]:
+        if self.extract == ["*"]:
+            return asset
+
+        for extract in self.extract:
+            if os.path.join("assets", asset.file).startswith(extract):
+                return asset
+        return None
