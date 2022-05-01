@@ -17,7 +17,7 @@ class Extractor:
         self.version = MinecraftVersion(version)
         self.out_dir = MAIN_SETTINGS.get_property("locations", "out")
         self.temp_dir = MAIN_SETTINGS.get_property("locations", "temp")
-        self.logger = get_logger("Extract")
+        self.logger = get_logger("Extract", str(self.version))
 
     def run(self):
         # Setup temp dir

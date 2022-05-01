@@ -1,18 +1,25 @@
+import argparse
 import logging
 import sys
 
 from minecraft_extractor import minecraft
 from minecraft_extractor.extract import Extractor
+from minecraft_extractor.minecraft import MinecraftVersion
 from minecraft_extractor.settings import MAIN_SETTINGS
 from minecraft_extractor.util.files import folder_dialog
 
 
 def main():
+    minecraft.init()
     setup_logger()
     setup_settings()
-    minecraft.init()
 
-    Extractor("1.18.2").run()
+    # Create argparse info
+    parser = argparse.ArgumentParser(description="Minecraft Extract is a tool to extract files from Minecraft")
+    parser.add_argument("-v", "--version", type=str, nargs=1, default=MinecraftVersion.get_latest_release().version_id, metavar="version")
+    args = parser.parse_args()
+
+    Extractor(args.version).run()
 
 
 def setup_logger():
