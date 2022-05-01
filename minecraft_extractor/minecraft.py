@@ -63,6 +63,7 @@ class MinecraftVersion:
     manifest_entry: dict
     version_index: dict
     asset_index: dict
+    jar_dir: str
 
     def __init__(self, version_id: str):
         self.version_id = version_id
@@ -93,6 +94,11 @@ class MinecraftVersion:
         with open(asset_index_dir, "r") as file:
             self.asset_index = json.load(file)
 
+        self.jar_dir = os.path.join(MAIN_SETTINGS.get_property("locations", "minecraft"),
+                                    "versions",
+                                    self.version_id,
+                                    f"{self.version_id}.jar")
+
     def get_assets(self) -> list[IndexedAsset]:
         assets = []
 
@@ -101,8 +107,8 @@ class MinecraftVersion:
 
         return assets
 
-    def download(self):
-        pass
+    def download_jar(self):
+        download_file(self.version_index["downloads"]["client"]["url"], self.jar_dir, check_out=True)
 
     def __str__(self) -> str:
         return self.version_id

@@ -16,10 +16,14 @@ def main():
 
     # Create argparse info
     parser = argparse.ArgumentParser(description="Minecraft Extract is a tool to extract files from Minecraft")
-    parser.add_argument("-v", "--version", type=str, nargs=1, default=MinecraftVersion.get_latest_release().version_id, metavar="version")
+    parser.add_argument("-v", "--version",
+                        type=str,
+                        nargs=1,
+                        default=[MinecraftVersion.get_latest_release().version_id],
+                        metavar="version")
     args = parser.parse_args()
 
-    Extractor(args.version).run()
+    Extractor(args.version[0]).run()
 
 
 def setup_logger():

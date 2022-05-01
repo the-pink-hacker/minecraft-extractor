@@ -1,6 +1,7 @@
 import logging
 import os.path
 import shutil
+from zipfile import ZipFile
 
 from minecraft_extractor.minecraft import MinecraftVersion
 from minecraft_extractor.settings import MAIN_SETTINGS
@@ -26,10 +27,13 @@ class Extractor:
 
         self.extract_indexed_assets()
         self.extract_jar()
+        self.package()
 
     def extract_indexed_assets(self):
         assets = self.version.get_assets()
-        self.logger.info("Extracting indexed assets...")
+
+        logger = get_logger(self.logger.name, "Indexed")
+
         for i, asset in enumerate(assets, start=1):
             asset_dir = os.path.join(MAIN_SETTINGS.get_property("locations", "minecraft"),
                                      "assets",
@@ -46,9 +50,19 @@ class Extractor:
                 os.makedirs(os.path.dirname(asset_temp_dir))
                 shutil.copyfile(asset_dir, asset_temp_dir)
 
-            self.logger.info(f"Extracted asset [{i}/{len(assets)}]: {asset.file}")
+            logger.info(f"Extracted asset [{i}/{len(assets)}]: assets/{asset.file}")
 
     def extract_jar(self):
+        logger = get_logger(self.logger.name, "Jar")
+
+        self.version.download_jar()
+
+        with ZipFile(self.version.jar_dir, "r") as jar:
+            for i, archive_file in enumerate(jar.filelist, start=1):
+                jar.extract(archive_file, self.temp_dir)
+                logger.info(f"Extracted asset [{i}/{len(jar.filelist)}]: {archive_file.filename}")
+
+    def package(self):
         pass
 
     def clear_temp(self):
