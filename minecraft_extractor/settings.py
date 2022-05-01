@@ -13,6 +13,7 @@ class Settings:
     def add_property(self, group: str, key: str, default=None) -> "Settings":
         """
         Add a property to be stored in the settings
+
         :param group: A section of properties
         :param key: The name of the property
         :param default: The default value of the property
@@ -27,6 +28,7 @@ class Settings:
     def set_property(self, group: str, key: str, value) -> "Settings":
         """
         Set the value of a property
+
         :param group: A section of properties
         :param key: The name of the property
         :param value: The value that the property will be set to
@@ -38,6 +40,7 @@ class Settings:
     def get_property(self, group: str, key: str):
         """
         Get the value of a property
+
         :param group: A section of properties
         :param key: The name of the property
         :return: The value stored in the property
@@ -53,6 +56,7 @@ class Settings:
     def is_property_unset(self, group: str, key: str) -> bool:
         """
         Whether the selected property is unset
+
         :param group: A section of properties
         :param key: The name of the property
         :return: True is unset. False if set
@@ -62,6 +66,7 @@ class Settings:
     def get_group(self, group: str):
         """
         Get the value of a property
+
         :param group: A section of properties
         :return: The value stored in the property
         """

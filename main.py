@@ -1,11 +1,16 @@
 import sys
 
+from minecraft_extractor import minecraft
+from minecraft_extractor.extract import Extractor
 from minecraft_extractor.settings import MAIN_SETTINGS
 from minecraft_extractor.util import folder_dialog
 
 
 def main():
     setup_settings()
+    minecraft.init()
+
+    Extractor("1.18.2").run()
 
 
 def setup_settings():
