@@ -90,7 +90,10 @@ class Settings:
 
 
 MAIN_SETTINGS = Settings(0)\
-    .add_property("locations", "minecraft")
+    .add_property("locations", "minecraft")\
+    .add_property("locations", "out", "out")\
+    .add_property("locations", "temp", "temp")\
+    .add_property("indexes", "update_version_manifest", True)
 
 # Load settings file
 MAIN_SETTINGS.load()

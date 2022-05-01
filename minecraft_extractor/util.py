@@ -15,10 +15,21 @@ def folder_dialog(title="Select Folder", directory=os.path.abspath(os.sep)):
     return parse_dir(filedialog.askdirectory(title=title, initialdir=directory))
 
 
-def download_file(url: str, dest: str):
-    if not os.path.exists(os.path.dirname(dest)):
-        os.makedirs(os.path.dirname(dest))
+def download_file(url: str, out: str, check_out: bool = False):
+    """
+    Download a file from an url
+
+    :param url: The url that the file is located at
+    :param out: The directory that the file will be saved to
+    :param check_out: Check if the out directory already exists
+    """
+    if check_out:
+        if os.path.exists(out):
+            return
+
+    if not os.path.exists(os.path.dirname(out)):
+        os.makedirs(os.path.dirname(out))
 
     with requests.get(url, stream=True) as r:
-        with open(dest, "wb") as f:
+        with open(out, "wb") as f:
             shutil.copyfileobj(r.raw, f)

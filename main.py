@@ -10,7 +10,7 @@ def main():
     setup_settings()
     minecraft.init()
 
-    Extractor("1.18.2").run()
+    Extractor("1.9").run()
 
 
 def setup_settings():
